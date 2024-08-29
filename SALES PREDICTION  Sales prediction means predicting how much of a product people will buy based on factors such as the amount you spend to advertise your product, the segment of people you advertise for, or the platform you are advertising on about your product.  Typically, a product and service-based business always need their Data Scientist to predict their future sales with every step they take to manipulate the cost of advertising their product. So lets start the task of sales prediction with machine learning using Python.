@@ -1,0 +1,53 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the data
+df = pd.read_csv("/content/Advertising.csv")
+
+# Display the first few rows
+df.head()
+
+# Display the last few rows
+df.tail()
+
+# Check the shape of the dataframe
+df.shape
+
+# Get information about the dataframe
+df.info()
+
+# Get descriptive statistics of the dataframe
+df.describe()
+
+# Split the data into features (x) and target (y)
+x = df.iloc[:, 0:-1]
+y = df.iloc[:, -1]
+
+# Split the data into training and testing sets
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=43)
+
+# Convert the data to integers
+x_train = x_train.astype(int)
+y_train = y_train.astype(int)
+x_test = x_test.astype(int)
+y_test = y_test.astype(int)
+
+# Standardize the features
+Sc = StandardScaler()
+x_train_scaled = Sc.fit_transform(x_train)
+x_test_scaled = Sc.transform(x_test)  # Corrected to transform instead of fit_transform
+
+# Create and train the Linear Regression model
+lr = LinearRegression()
+lr.fit(x_train_scaled, y_train)
+
+# Predict on the test set
+y_pred = lr.predict(x_test_scaled)
+
+# Plot the results
+plt.scatter(y_test, y_pred, c='r')
+plt.show()
